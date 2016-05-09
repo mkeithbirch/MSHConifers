@@ -38,7 +38,7 @@ topo.cnt.analyze <- topo.cnt.all %>%
   replace_na(list(Total13 = 0, ABPR13 = 0, PICO13 = 0, PIMO13 = 0,
                   PSME13 = 0, THPL13 = 0, TSHE13 = 0, UNKNOWN13 = 0)) 
 
-#2013 conifer data spatial models:
+#2013 conifer data spatial models (NOTE: we could do this with a simple function and loop):
 #all conifers model for heat load (hl.3) used in thesis, quasipoisson error distribution
 qglm.hl13<-glm(Total13~hl.3+rgh.mu.mean,data=topo.cnt.analyze,quasipoisson) 
 summary(qglm.hl13)
@@ -89,3 +89,6 @@ summary(qglm.tshe.hl10)
 #incident radiation model for tshe
 qglm.tshe.ir10<-glm(TSHE10~ir.3+rgh.mu.mean,data=topo.cnt.analyze,quasipoisson)
 summary(qglm.tshe.ir10)
+
+#Create summary table for ir 2010 and 2013
+stargazer(qglm.ir10, qglm.ir13, qglm.abpr.ir10, qglm.abpr.ir13, qglm.psme.ir10, qglm.psme.ir13, qglm.tshe.ir10, qglm.tshe.ir13)
