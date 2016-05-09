@@ -1,8 +1,9 @@
 
 
-require(readxl)
-require(tidyr)
-require(dplyr)
+library(readxl)
+library(tidyr)
+library(dplyr)
+library(stargazer)
 conifersxl<-read_excel("conifers2013 updated 2014.xlsx","forR")
 conifers2013.tbl<-tbl_df(read_excel("conifers2013 updated 2014.xlsx","forR"))
 
@@ -83,4 +84,3 @@ summary(qglm.tshe.hl10)
 #incident radiation model for tshe
 qglm.tshe.ir10<-glm(TSHE10~ir.3+rgh.mu.mean,data=topo.cnt.analyze,quasipoisson)
 summary(qglm.tshe.ir10)
-
