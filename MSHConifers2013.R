@@ -1,5 +1,3 @@
-
-
 library(readxl)
 library(tidyr)
 library(dplyr)
@@ -14,7 +12,7 @@ spp.abund13 <- conifers2013.tbl %>%
   count2013 = n()
   )
 #create variables for 2013 species abundance by site (separate variables for each species)
-  spp.abund13 <- spread(spp.abund13,species,count2013) 
+  spp.abund13 <- spread(spp.abund13,species,count2013, fill = 0) 
 #Rename columns as "species code" + "13"
     colnames(spp.abund13)<-paste(colnames(spp.abund13),"13",sep="")
     spp.abund13
@@ -30,12 +28,14 @@ topo.cnt.analyze <- topo.cnt.all %>%
   #Filter data to exlcude sites without heat load (or other spatial) data
   filter(!is.na(hl.3)) %>% 
   #Exclude sites noted to be recently disturbed in 2010 data
-  filter(disturb == "N") 
-  
+  filter(disturb == "N") %>% 
+#Assuming all sites surveyed in 2010 were also surveyed in 2013, we can replace "NA" values in 2013 abundance with 0.
+  replace_na(list(Total13 = 0, ABPR13 = 0, PICO13 = 0, PIMO13 = 0,
+                  PSME13 = 0, THPL13 = 0, TSHE13 = 0, UNKNOWN13 = 0)) 
 
 #2013 conifer data spatial models:
 #all conifers model for heat load (hl.3) used in thesis, quasipoisson error distribution
-qglm.hl13<-glm(Total13~hl.3+rgh.mu.mean,data=topo.cnt.analyze,quasipoisson)
+qglm.hl13<-glm(Total13~hl.3+rgh.mu.mean,data=topo.cnt.analyze,quasipoisson) 
 summary(qglm.hl13)
 #all conifers model for incident radiation (ir.3) used in thesis, quasipoisson error distribution
 qglm.ir13<-glm(Total13~ir.3+rgh.mu.mean,data=topo.cnt.analyze,quasipoisson)
