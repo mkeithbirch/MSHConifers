@@ -92,3 +92,21 @@ summary(qglm.tshe.ir10)
 
 #Create summary table for ir 2010 and 2013
 stargazer(qglm.ir10, qglm.ir13, qglm.abpr.ir10, qglm.abpr.ir13, qglm.psme.ir10, qglm.psme.ir13, qglm.tshe.ir10, qglm.tshe.ir13)
+
+
+#Adding bare ground to the mix
+#Read in bare ground data
+bare.tbl <- tbl_df(read.csv("pctbare.csv"))
+
+#Filter for 2013 bare ground data
+bare.2013 <- filter(bare.tbl, year == 2013) %>%
+#create t.pt by combining transect and point
+  mutate(t.pt = paste(transect, point, sep="")) %>% select(t.pt, pct.bareground) 
+#Join bare ground data with topo and abundance data
+topo.cnt.bare.analyze <- full_join(topo.cnt.analyze, bare.2013, by = "t.pt")
+
+#Model total abundance by site as before but with bare ground data included
+qglm.topoveg13<-glm(Total13~hl.3+rgh.mu.mean+pct.bareground,data=topo.cnt.bare.analyze,quasipoisson)
+summary(qglm.topoveg13)
+plot(qglm.topoveg13)
+
