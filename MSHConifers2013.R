@@ -1,9 +1,14 @@
+#Prior to running code, set the working directory to Dropbox\Birchfield and Bishop\Rdata
+
+#load required packages (as of 5/9/16, stargazer is optional. No code for that yet, but I think it will be useful)
 library(readxl)
 library(tidyr)
 library(dplyr)
 library(stargazer)
-conifersxl<-read_excel("conifers2013 updated 2014.xlsx","forR")
-conifers2013.tbl<-tbl_df(read_excel("conifers2013 updated 2014.xlsx","forR"))
+
+#Read in the data
+conifers2013.tbl <- tbl_df(read_excel("conifers2013 updated 2014.xlsx","forR"))
+topo.cnt <- tbl_df(read.csv("topo.count.csv"))
 
 #Calculate conifer abundance by species and site for 2013.
 spp.abund13 <- conifers2013.tbl %>%
@@ -20,7 +25,7 @@ spp.abund13 <- conifers2013.tbl %>%
   spp.abund13 <- spp.abund13 %>% mutate(Total13 = sum(c(ABPR13, PICO13, PIMO13, PSME13, THPL13, TSHE13, UNKNOWN13), na.rm = TRUE))
 
 #load in topography data (includes 2010 conifer counts)
-topo.cnt <- tbl_df(read.csv("topo.count.csv"))
+
 #Join 2013 data with topo.cnt
 topo.cnt.all <- full_join(topo.cnt, spp.abund13, by = c("t.pt" = "transect.point13"))
 #Create new table from topo.cnt.all that includes only the data we want to use in the analysis
